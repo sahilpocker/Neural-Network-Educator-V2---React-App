@@ -1,24 +1,16 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { gsap } from 'gsap';
+import theme from './theme';
 
-const colors = {
-  licorice: '#231b1b',
-  mintGreen: '#ddfff7',
-  teaRose: '#ceabb1',
-  caribbeanCurrent: '#216869',
-  mossGreen: '#898952',
-  lightCaribbean: '#8edadb',
-  lightTeaRose: '#e2cdd0',
-};
 
 const NetworkContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 20px;
+  margin: 0px;
   position: relative;
-  padding-bottom: 20px;
+  padding-bottom: px;
 `;
 
 const Layer = styled.div`
@@ -30,9 +22,9 @@ const Layer = styled.div`
 `;
 
 const Neuron = styled.div`
-  background-color: ${colors.teaRose};
+  background-color: ${theme.palette.neonBlue}; // Vibrant neon cyan
   border-radius: 50%;
-  border: 2px solid ${colors.lightTeaRose};
+  border: 2px solid ${theme.palette.secondary.contrastText}; // Slightly darker cyan for secondary elements
   width: 30px;
   height: 30px;
   margin: 10px;
@@ -41,21 +33,22 @@ const Neuron = styled.div`
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: ${colors.mintGreen};
+    background-color: ${theme.palette.white}; // Bright neon blue on hover
   }
+
 `;
 
 const Dots = styled.div`
   font-size: 20px;
   line-height: 0;
-  color: ${colors.mossGreen};
   text-align: center;
   width: 100%;
   margin: 10px 0;
+  z-index: 2;
 `;
 
 const Link = styled.div`
-  background-color: ${colors.lightCaribbean};
+  background-color: ${theme.palette.secondary.main}; // Slightly darker cyan for secondary elements
   height: 2px;
   position: absolute;
   z-index: 0;
@@ -69,25 +62,24 @@ const ButtonContainer = styled.div`
 const ControlButton = styled.button`
   margin: 5px;
   padding: 5px 10px;
-  background-color: ${colors.lightTeaRose};
+  background-color: ${theme.palette.secondary.main}; // Slightly darker cyan for secondary elements
   border: 1px solid gray;
   border-radius: 5px;
   cursor: pointer;
 
   &:hover {
     background-color: gray;
-    color: white;
+    color: ${theme.palette.text.primary}; // Light cyan text color on hover
   }
 `;
 
 const NeuronCountDisplay = styled.div`
-  color: ${colors.mossGreen};
   margin-top: 10px;
   font-size: 14px;
 `;
 
-const NeuralNetworkVisualizer = () => {
-    const networkRef = useRef(null);
+const NeuralNetworkVisualizer = ({ onNeuronCountChange }) => {
+  const networkRef = useRef(null);
     const [hiddenLayer1Neurons, setHiddenLayer1Neurons] = useState(10);
     const [hiddenLayer2Neurons, setHiddenLayer2Neurons] = useState(10);
     const [links, setLinks] = useState([]);
@@ -102,6 +94,8 @@ const NeuralNetworkVisualizer = () => {
         setHiddenLayer2Neurons(prevCount => Math.max(minNeurons, Math.min(prevCount + adjustment, maxNeurons)));
       }
     }, []);
+
+    
   
     // Render 8 neurons for visualization purposes
     const renderNeurons = useCallback((count, layerIndex) => {
@@ -192,7 +186,7 @@ const NeuralNetworkVisualizer = () => {
         <NetworkContainer ref={networkRef}>
           <Layer>
             {renderNeurons(28, 0)}
-            <NeuronCountDisplay>Input Layer</NeuronCountDisplay>
+            <NeuronCountDisplay>Input Layer : 784 Neurons</NeuronCountDisplay>
           </Layer>
     
           <Layer>
@@ -215,7 +209,7 @@ const NeuralNetworkVisualizer = () => {
     
           <Layer>
             {renderNeurons(10, 3)}
-            <NeuronCountDisplay>Output Layer (MNIST Categories)</NeuronCountDisplay>
+            <NeuronCountDisplay>Output Layer (10 MNIST Categories)</NeuronCountDisplay>
           </Layer>
     
           {links}

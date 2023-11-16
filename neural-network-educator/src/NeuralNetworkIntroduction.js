@@ -2,9 +2,9 @@ import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { gsap, ScrollTrigger } from 'gsap/all';
 
-
 gsap.registerPlugin(ScrollTrigger);
 
+// Styled Components
 const PanelsContainer = styled.div`
   display: flex;
   width: 300vw; // 3 panels each 100vw wide
@@ -20,25 +20,6 @@ const Panel = styled.div`
   justify-content: center;
   text-align: center;
   padding: 50px;
-`;
-const VideoIframe = styled.iframe`
-  width: 100%;
-  height: 0;
-  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-  position: relative;
-`;
-
-const VideoWrapper = styled.div`
-  position: relative;
-  width: 80%; /* Adjust the width as needed */
-  margin: 20px auto;
-  iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
 `;
 
 
@@ -56,6 +37,11 @@ const SummaryText = styled.p`
   opacity: 1;
 `;
 
+const VideoContainer = styled.div`
+  width: 80%; 
+  margin: 20px auto;
+  opacity: 1;
+`;
 
 const NeuralNetworkIntroduction = () => {
   const panelsContainerRef = useRef(null);
@@ -87,16 +73,17 @@ const NeuralNetworkIntroduction = () => {
         </IntroductionText>
       </Panel>
       <Panel className="panel">
-        <VideoWrapper>
-          <VideoIframe
+        <VideoContainer>
+          <iframe
+            width="560"
+            height="315"
             src="https://www.youtube.com/embed/vyNkAuX29OU?si=pfg1XeKjbjYttYZz"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
             title="Neural Network Video"
-            loading="lazy" // Lazy load the iframe
-          />
-        </VideoWrapper>
+          ></iframe>
+        </VideoContainer>
       </Panel>
       <Panel className="panel">
         <SummaryText>

@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+
 
 const SectionContainer = styled.div`
   min-height: 100vh;
@@ -34,13 +36,14 @@ const Button = styled.button`
 `;
 
 const ConclusionSection = () => {
-  const handleQuizClick = () => {
-    // Logic to navigate to the quiz
-  };
 
-  const handlePlaygroundClick = () => {
-    // Logic to navigate to the playground
-  };
+      const navigate = useNavigate();
+
+  
+    const navigateToPlayground = () => {
+        navigate('/NeuralNetworkPlayground'); 
+      };
+  
 
   return (
     <SectionContainer>
@@ -48,7 +51,7 @@ const ConclusionSection = () => {
         Congratulations on exploring the fascinating world of neural networks! Now that you've learned how they work, 
         why not head over to the playground to experiment and learn more!
       </Text>
-      <Button onClick={handlePlaygroundClick}>Go to Playground</Button>
+      <Button onClick={navigateToPlayground}>Go to Playground</Button>
     </SectionContainer>
   );
 };

@@ -37,6 +37,8 @@ const NeuronSection = ({ gridData }) => {
     }));
 
     setNeurons(initialNeurons);
+    const container = containerRef.current;
+
 
     initialNeurons.forEach(neuron => {
       gsap.to(`#${neuron.id}`, {
@@ -45,7 +47,7 @@ const NeuronSection = ({ gridData }) => {
         duration: 3,
         ease: 'power1.inOut',
         scrollTrigger: {
-          trigger: containerRef.current,
+          trigger: container,
           start: 'top center',
           end: 'bottom center',
           scrub: true
@@ -54,10 +56,10 @@ const NeuronSection = ({ gridData }) => {
     });
 
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => {
-        if (trigger.trigger === containerRef.current) {
-          trigger.kill();
-        }
+        ScrollTrigger.getAll().forEach(trigger => {
+            if (trigger.trigger === container) {
+              trigger.kill();
+            }
       });
     };
   }, [gridData]);

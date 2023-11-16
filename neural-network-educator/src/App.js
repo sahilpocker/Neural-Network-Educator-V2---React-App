@@ -1,6 +1,11 @@
 import React, { useRef, useEffect,useState } from 'react';
 import styled from 'styled-components';
 import { gsap } from 'gsap';
+
+import { useNavigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
+
+
 import NeuralNetworkIntroduction from './NeuralNetworkIntroduction';
 import HandwrittenDigitIntroduction from './HandwrittenDigitIntroduction';
 import HandwrittenDigitGrid from './HandwrittenDigitGrid'
@@ -10,6 +15,7 @@ import PixelDrawingSection from './PixelDrawingSection';
 import HiddenLayersSection from './HiddenLayerSection';
 import ConclusionSection from './ConclusionSection';
 import NeuronSection from './NeuronSection';
+import NeuralNetworkPlayground from './NeuralNetworkPlayground'
 
 
 
@@ -62,10 +68,13 @@ const ScrollInvite = styled.p`
   color: ${theme.palette.secondary.main}; // Secondary light color
 `;
 
-const App = () => {
+const Home = () => {
   const canvasRef = useRef(null);
+  const navigate = useNavigate();
 
   const [gridData, setGridData] = useState(Array(28).fill(Array(28).fill(255)));
+
+  
 
 
   useEffect(() => {
@@ -73,6 +82,7 @@ const App = () => {
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+
 
     let particles = [];
 
@@ -119,10 +129,8 @@ const App = () => {
     
   }, []);
 
-  // Navigation function (update as per your routing/navigation setup)
   const navigateToPlayground = () => {
-    console.log('Navigate to the Playground');
-    // Implement navigation logic, e.g., using React Router or window.location
+    navigate('/NeuralNetworkPlayground'); 
   };
 
   return (
@@ -151,6 +159,16 @@ const App = () => {
       <ConclusionSection/>
     
     </div>
+  );
+};
+
+const App = () => {
+  return (
+    
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/NeuralNetworkPlayground" element={<NeuralNetworkPlayground />} />
+      </Routes>
   );
 };
 
