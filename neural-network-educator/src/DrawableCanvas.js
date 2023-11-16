@@ -1,5 +1,17 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Stage, Layer, Line, Rect } from 'react-konva';
+import styled from 'styled-components';
+
+const Button = styled.button`
+  padding: 5px 5x;
+  margin: 5px;
+  background-color: #84c5f4;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+`
 
 const DrawableCanvas = ({ onDrawingChange }) => {
     const [lines, setLines] = useState([]);
@@ -76,8 +88,8 @@ const DrawableCanvas = ({ onDrawingChange }) => {
                     ))}
                 </Layer>
             </Stage>
-            <button onClick={handleClearCanvas}>Clear</button>
-            <button onClick={handleUndo}>Undo</button>
+            <Button onClick={handleClearCanvas}>Clear</Button>
+            <Button onClick={handleUndo}>Undo</Button>
         </>
     );
 };

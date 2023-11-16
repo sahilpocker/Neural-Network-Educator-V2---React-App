@@ -12,19 +12,23 @@ const SectionContainer = styled.div`
 `;
 
 const Text = styled.p`
-  font-size: 1.5em;
-  color: #4fc3f7;
-  text-shadow: 1px 1px 2px #aaa;
+   font-size: 2em;
+    color: white;
+    font-weight: normal;
+    opacity: 1;
+    font-family: system-ui;
+    line-height: 1.5em;
+    width:54%;
 `;
 
 const ActivationSection = () => {
   return (
     <SectionContainer>
       <Text>
-        In these hidden layers, each neuron acts like a sensor, responding to specific patterns in the input. This response 
-        is called 'activation'. The level of activation is determined by two main factors: 'weights', which influence the 
-        neuron's focus on certain input features, and 'biases', which set the threshold for the neuron to activate. These 
-        elements fine-tune the neuron's responsiveness, ensuring it reacts appropriately to different inputs.
+      Inside the neural network, each neuron is like a mini-detector. 
+      They look for specific patterns in the input, a process known as 'activation'. <br>
+        
+      </br>This depends on two things: 'weights', which highlight certain features in the input, and 'biases', which decide when the neuron should activate. These factors help each neuron respond just right to different kinds of input.
       </Text>
       {/* Placeholder for any interactive elements or visuals */}
     </SectionContainer>

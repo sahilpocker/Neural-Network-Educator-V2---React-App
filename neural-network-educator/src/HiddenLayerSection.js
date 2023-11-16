@@ -40,9 +40,13 @@ const NetworkImage = styled.img`
 `;
 
 const Text = styled.p`
-  font-size: 1.5em;
-  color: #4fc3f7;
-  text-shadow: 1px 1px 2px #aaa;
+    font-size: 2em;
+    color: white;
+    font-weight: normal;
+    opacity: 1;
+    font-family: system-ui;
+    line-height: 1.5em;
+    width:54%;
 `;
 
 const HiddenLayersSection = () => {
@@ -65,8 +69,8 @@ const HiddenLayersSection = () => {
         <Panel>
         <SectionContainer>
           <Text>
-            Having seen how 784 neurons receive pixel values, we now explore their transformation into 10 distinct categories...
-          </Text>
+          After drawing your number, each pixel has become a neuron on the screen. There are 784 of them, representing each part of your drawing.
+Now, these neurons will do something interesting. They're going to organize the information from these pixels into 10 different groups. This helps the computer understand what number you've drawn. Let's see how this process works!          </Text>
           </SectionContainer>
         </Panel>
         <Panel>

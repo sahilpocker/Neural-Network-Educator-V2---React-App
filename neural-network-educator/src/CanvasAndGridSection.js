@@ -17,7 +17,7 @@ const SectionContainer = styled.div`
 
 const Text = styled.p`
   font-size: 1.5em;
-  color: #4fc3f7;
+  color: white;
   text-shadow: 1px 1px 2px #aaa;
 `;
 
@@ -44,8 +44,7 @@ const PixelDrawingSection = () => {
         into a grid of little squares. These squares are called pixels, and they are super 
         important to how computers 'see' things.
         <br /><br />
-        Go ahead, draw and discover the pixel magic – it's a first step into the fascinating 
-        world of neural networks and computer learning!
+        Go ahead, draw and discover the pixel magic!
       </Text>
       <CanvasAndGridSection />
     </SectionContainer>

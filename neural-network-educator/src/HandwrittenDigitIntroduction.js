@@ -17,10 +17,13 @@ const SectionContainer = styled.div`
 `;
 
 const Text = styled.p`
-  font-size: 1.5em;
-  color: #4fc3f7;
-  text-shadow: 1px 1px 2px #aaa;
+  font-size: 2em;
+  color: white;
+  font-weight: normal;
   opacity: 1;
+  font-family: system-ui;
+  line-height: 1.5em;
+  width:54%;
 `;
 
 const GridVisualization = styled.div`
@@ -60,14 +63,12 @@ const HandwrittenDigitIntroduction = () => {
   return (
     <SectionContainer>
       <Text ref={textRef}>
-      Have you ever seen a picture of a handwritten number and noticed how each one can be a little different? 
-        Now, think about how a computer might see this picture. To a computer, this picture is made up of lots of tiny dots called 'pixels.' 
-        Each pixel is like a tiny square that can be dark or light, and together, they form an image of the number.
-        <br /><br />
-        But recognizing these numbers can be tricky for computers. After all, everyone has their unique style of writing. 
-        Some people might make their '7' with a line across the middle, while others don't. 
-        So, how can computers learn to understand and recognize these numbers in all their unique styles? 
-        That's where 'neural networks' come into play. These smart systems look at tons of different pixel-filled pictures of numbers and learn to find the patterns, no matter how we write them.      </Text>
+      
+          
+          Ever noticed how everyone writes numbers in their own way? Some might curve their '2's a bit more, or add a dash to their '7's. It's quite fascinating! But think about how computers, with their digital eyes, perceive these handwritten numbers. They don't see the curves or dashes like we do.
+          <br /><br />
+          So, how do computers recognize these diverse handwriting styles? That's where the magic of 'neural networks' comes in. These sophisticated computer systems learn from countless examples of handwritten numbers. They master the art of spotting '2's and '7's, and all numbers in between, in all their unique forms.
+        </Text>
       <GridVisualization ref={gridRef}>
         {/* Insert visualization or image of a digit transforming into a 28x28 grid */}
       </GridVisualization>

@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
+
+
 const Frame = styled.div`
   border: 3px solid #84c5f4;
   border-radius: 10px;

@@ -4,6 +4,7 @@ import { gsap, ScrollTrigger } from 'gsap/all';
 import DrawableCanvas from './DrawableCanvas'; // Import your DrawableCanvas component
 import PixelGrid from './PixelGrid'; // Import your PixelGrid component
 import Pica from 'pica'; // Ensure Pica is imported
+import theme from './theme';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -19,7 +20,7 @@ const SectionContainer = styled.div`
 
 const Text = styled.p`
   font-size: 1.5em;
-  color: #4fc3f7;
+  color: White;
   text-shadow: 1px 1px 2px #aaa;
 `;
 
@@ -96,8 +97,7 @@ const PixelDrawingSection = ({ gridData, setGridData }) => {
         into a grid of little squares. These squares are called pixels, and they are super 
         important to how computers 'see' things.
         <br /><br />
-        Go ahead, draw and discover the pixel magic – it's a first step into the fascinating 
-        world of neural networks and computer learning!
+        Go ahead, draw and discover the pixel magic!
       </Text>
       <DrawingArea>
         <DrawableCanvas onDrawingChange={handleDrawingChange} />

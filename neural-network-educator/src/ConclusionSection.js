@@ -14,10 +14,13 @@ const SectionContainer = styled.div`
 `;
 
 const Text = styled.p`
-  font-size: 1.5em;
-  color: #4fc3f7;
-  text-shadow: 1px 1px 2px #aaa;
-  margin-bottom: 30px;
+  font-size: 2em;
+    color: white;
+    font-weight: normal;
+    opacity: 1;
+    font-family: system-ui;
+    line-height: 1.5em;
+    width:54%;
 `;
 
 const Button = styled.button`

@@ -192,8 +192,8 @@ const NeuralNetworkVisualizer = ({ onNeuronCountChange }) => {
           <Layer>
             {renderNeurons(8, 1)}
             <ButtonContainer>
-              <ControlButton onClick={() => adjustNeuronCount(1, 1)}>+</ControlButton>
-              <ControlButton onClick={() => adjustNeuronCount(1, -1)}>-</ControlButton>
+              <ControlButton onClick={() => adjustNeuronCount(1, 5)}>+</ControlButton>
+              <ControlButton onClick={() => adjustNeuronCount(1, -5)}>-</ControlButton>
             </ButtonContainer>
             <NeuronCountDisplay>Hidden Layer 1: {hiddenLayer1Neurons} Neurons</NeuronCountDisplay>
           </Layer>
@@ -201,8 +201,8 @@ const NeuralNetworkVisualizer = ({ onNeuronCountChange }) => {
           <Layer>
             {renderNeurons(8, 2)}
             <ButtonContainer>
-              <ControlButton onClick={() => adjustNeuronCount(2, 1)}>+</ControlButton>
-              <ControlButton onClick={() => adjustNeuronCount(2, -1)}>-</ControlButton>
+              <ControlButton onClick={() => adjustNeuronCount(2, 5)}>+</ControlButton>
+              <ControlButton onClick={() => adjustNeuronCount(2, -5)}>-</ControlButton>
             </ButtonContainer>
             <NeuronCountDisplay>Hidden Layer 2: {hiddenLayer2Neurons} Neurons</NeuronCountDisplay>
           </Layer>

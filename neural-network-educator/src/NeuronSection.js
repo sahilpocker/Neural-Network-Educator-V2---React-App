@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { gsap, ScrollTrigger } from 'gsap/all';
+import { gsap, Power1, ScrollTrigger } from 'gsap/all';
 
 gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(Power1);
+
 
 const NeuronSectionContainer = styled.div`
   position: relative;
@@ -56,10 +58,10 @@ const NeuronSection = ({ gridData }) => {
     });
 
     return () => {
-        ScrollTrigger.getAll().forEach(trigger => {
-            if (trigger.trigger === container) {
-              trigger.kill();
-            }
+      ScrollTrigger.getAll().forEach(trigger => {
+        if (trigger.trigger === containerRef.current) {
+          trigger.kill();
+        }
       });
     };
   }, [gridData]);

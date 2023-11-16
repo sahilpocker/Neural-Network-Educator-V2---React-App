@@ -12,20 +12,23 @@ const SectionContainer = styled.div`
 `;
 
 const Text = styled.p`
-  font-size: 1.5em;
-  color: #4fc3f7;
-  text-shadow: 1px 1px 2px #aaa;
+   font-size: 2em;
+    color: white;
+    font-weight: normal;
+    opacity: 1;
+    font-family: system-ui;
+    line-height: 1.5em;
+    width:54%;
 `;
 const LearningProcessSection = () => {
   return (
     <SectionContainer>
       <Text>
-        The learning process in neural networks resembles training a cricket player to bowl accurately. Initially, the 
-        bowler's aim might be off. By observing the distance between the ball and the stumps, we can adjust the bowler's 
-        technique. Similarly, our network starts with random predictions. Through training with the MNIST dataset, it adjusts 
-        its weights and biases to minimize the 'cost', which is the difference between its predictions and the actual labels. 
-        Each adjustment is a step towards more accurate digit recognition, akin to guiding the bowler to hit the stumps more 
-        consistently.
+      Think of training a neural network like coaching a cricket player. 
+      At first, the player's aim might not be perfect. By observing and adjusting their technique,
+       they get better over time.
+       <br></br> 
+       In our network, it begins with guesses. But as it learns from the MNIST dataset, it fine-tunes its weights and biases to reduce errors, much like coaching the player to improve their aim. Each tweak brings the network closer to recognizing digits accurately.
       </Text>
       {/* Placeholder for any interactive elements or visuals */}
     </SectionContainer>
