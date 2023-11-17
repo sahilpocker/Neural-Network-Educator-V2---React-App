@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const BoxContainer = styled.div`
-  width: 300px; // Adjust width as needed
+  width: 300px; 
   padding: 20px;
   margin-right: 20px;
   background-color: #f3f3f3; // Light background for the box
@@ -26,7 +26,7 @@ const LoadButton = styled.button`
 `;
 
 const DataVisualization = styled.div`
-  height: 200px; // Adjust height as needed
+  height: 200px; 
   overflow-y: auto; // Scroll for overflow
   background-color: white;
   border: 1px solid #ddd;

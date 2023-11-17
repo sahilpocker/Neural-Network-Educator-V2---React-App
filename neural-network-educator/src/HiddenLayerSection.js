@@ -32,11 +32,11 @@ const Panel = styled.div`
 
 const NetworkImage = styled.img`
   position: relative;
-  width: auto; // Adjust size as needed
-  height: auto; // Adjust size as needed
-  top: 50%; // Center vertically
-  left: 50%; // Center horizontally
-  transform: translate(-50%, -50%); // Adjust position as needed
+  width: auto; 
+  height: auto; 
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%); 
 `;
 
 const Text = styled.p`
@@ -51,7 +51,6 @@ const Text = styled.p`
 
 const HiddenLayersSection = () => {
     useEffect(() => {
-      // ScrollTrigger for horizontal scrolling
       gsap.to('.horizontal-scroll', {
         x: () => -(document.querySelector('.horizontal-scroll').offsetWidth - window.innerWidth),
         ease: 'none',

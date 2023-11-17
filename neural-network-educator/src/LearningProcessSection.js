@@ -30,7 +30,6 @@ const LearningProcessSection = () => {
        <br></br> 
        In our network, it begins with guesses. But as it learns from the MNIST dataset, it fine-tunes its weights and biases to reduce errors, much like coaching the player to improve their aim. Each tweak brings the network closer to recognizing digits accurately.
       </Text>
-      {/* Placeholder for any interactive elements or visuals */}
     </SectionContainer>
   );
 };

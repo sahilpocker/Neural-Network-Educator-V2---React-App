@@ -13,20 +13,23 @@ const SectionContainer = styled.div`
   align-items: center;
   justify-content: center;
   text-align: center;
-  background: #181529; // Consistent dark background
+  ${'' /* background: #181529; // Consistent dark background */}
   color: #fff; // Light text for contrast
 `;
 
 const GridVisualizationText = styled.p`
-  font-size: 1.5em;
-  color: #4fc3f7; // Consistent color scheme
+  font-size: 2em;
+  font-family: system-ui;
+
+  color: white; // Consistent color scheme
   margin-bottom: 30px;
   text-shadow: 1px 1px 2px #222; // Subtle text shadow for readability
 `;
 
 const MNISTExplanationText = styled.p`
   font-size: 1.3em;
-  color: #f0f8ff; // Light color for readability
+  font-family: system-ui;
+  color: #84c5f4; 
   margin-bottom: 20px;
 `;
 

@@ -70,9 +70,7 @@ const HandwrittenDigitIntroduction = () => {
           So, how do computers recognize these diverse handwriting styles? That's where the magic of 'neural networks' comes in. These sophisticated computer systems learn from countless examples of handwritten numbers. They master the art of spotting '2's and '7's, and all numbers in between, in all their unique forms.
         </Text>
       <GridVisualization ref={gridRef}>
-        {/* Insert visualization or image of a digit transforming into a 28x28 grid */}
       </GridVisualization>
-      {/* Placeholder for interactive canvas */}
     </SectionContainer>
   );
 };

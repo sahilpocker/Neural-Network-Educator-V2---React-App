@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { gsap, ScrollTrigger } from 'gsap/all';
-import DrawableCanvas from './DrawableCanvas'; // Import your DrawableCanvas component
-import PixelGrid from './PixelGrid'; // Import your PixelGrid component
-import Pica from 'pica'; // Ensure Pica is imported
+import DrawableCanvas from './DrawableCanvas'; 
+import PixelGrid from './PixelGrid'; 
+import Pica from 'pica'; 
 import theme from './theme';
 
 gsap.registerPlugin(ScrollTrigger);

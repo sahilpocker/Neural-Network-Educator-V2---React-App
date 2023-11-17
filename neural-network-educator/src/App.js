@@ -43,7 +43,9 @@ const ContentContainer = styled.div`
 const WelcomeMessage = styled.h1`
   font-size: 2.5em;
   margin-bottom: 20px;
-  color: ${theme.palette.text.primary}; // Updated to use theme color
+  color: ${theme.palette.text.primary}; 
+  font-family: system-ui;
+
 `;
 
 const ExploreButton = styled.button`
@@ -64,13 +66,16 @@ padding: 10px 20px;
 
 
 const ScrollInvite = styled.p`
-  font-size: 1.2em;
-  color: ${theme.palette.secondary.main}; // Secondary light color
+  font-size: 1.5em;
+  color: #3EECF1; 
+  font-family: system-ui;
+
 `;
 
 const Home = () => {
   const canvasRef = useRef(null);
   const navigate = useNavigate();
+  
 
   const [gridData, setGridData] = useState(Array(28).fill(Array(28).fill(255)));
 
@@ -82,12 +87,12 @@ const Home = () => {
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
+    
 
     let particles = [];
 
     const createParticles = () => {
-      const numberOfParticles = 50; // Adjust the number of particles as needed
+      const numberOfParticles = 50; 
       for (let i = 0; i < numberOfParticles; i++) {
         const x = Math.random() * canvas.width;
         const y = Math.random() * canvas.height;
@@ -109,7 +114,10 @@ const Home = () => {
         });
     
         particles.push(particle);
+
+  
       }
+      
     };
     
 

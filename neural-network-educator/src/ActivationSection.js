@@ -27,10 +27,9 @@ const ActivationSection = () => {
       <Text>
       Inside the neural network, each neuron is like a mini-detector. 
       They look for specific patterns in the input, a process known as 'activation'. <br>
-        
+
       </br>This depends on two things: 'weights', which highlight certain features in the input, and 'biases', which decide when the neuron should activate. These factors help each neuron respond just right to different kinds of input.
       </Text>
-      {/* Placeholder for any interactive elements or visuals */}
     </SectionContainer>
   );
 };
