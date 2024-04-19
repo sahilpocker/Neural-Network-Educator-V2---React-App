@@ -1,13 +1,59 @@
-import React, { useState, useEffect,useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import styled from 'styled-components';
 import * as tf from '@tensorflow/tfjs';
 import * as tfvis from '@tensorflow/tfjs-vis';
 import NeuralNetworkVisualizer from './NeuralNetworkVisualizer';
 import ParameterSlider from './ParameterSlider';
 import { MnistData } from './MnistData';
+import TestDrawableCanvas from './TestCanvas';
+import { Tooltip } from 'react-tooltip';
+
+import 'react-tooltip/dist/react-tooltip.css'
 
 
 
+const showVisor = () => {
+  tfvis.visor().toggle();
+};
+
+const TooltipIcon = styled.span`
+  margin-left: 5px;
+  cursor: pointer;
+`;
+const StyledTooltip = styled(Tooltip)`
+  max-width: 300px; /* Set the maximum width */
+  background-color: #fff; /* Set the background color */
+  color: #333; /* Set the text color */
+  border-radius: 4px; /* Add border radius for rounded corners */
+  padding: 8px 12px; /* Add some padding */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+  text-align: left; /* Align the text to the left */
+  z-index: 50;
+  &[data-tooltip-place="left"] {
+    margin-right: 10px; /* Add some spacing to the right of the tooltip */
+  }
+`;
+
+
+const Modal = styled.div`
+  display: ${props => props.show ? 'block' : 'none'};
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+`;
+
+const ModalContent = styled.div`
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+`;
 
 const MainGridContainer = styled.div`
   display: grid;
@@ -281,11 +327,72 @@ const createModel = useCallback(() => {
     tfvis.render.confusionMatrix(matrixSurface, { values: confMatrix });
   };
   
-  
-  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [prediction, setPrediction] = useState(null);
+  const [canvasImage, setCanvasImage] = useState(null);
+  const [processedImage, setProcessedImage] = useState(null);
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setPrediction(null);
+    setCanvasImage(null);
+  };
+
+  const predictDrawing = async () => {
+    if (!window.model || !canvasImage) {
+      console.error('Model or canvas image is not available for prediction');
+      return;
+    }
   
+    const image = new Image();
+    image.src = canvasImage;
+    await new Promise((resolve) => {
+      image.onload = resolve;
+    });
   
+    const img = await tf.browser.fromPixels(image, 1);
+    const processedTensor = await tf.tidy(() => {
+      let tensor = img.toFloat().div(tf.scalar(255));
+      tensor = tf.image.resizeBilinear(tensor, [28, 28]);
+      tensor = tensor.reshape([1, 784]);
+      tensor = tf.scalar(1).sub(tensor); // Invert the colors
+      return tensor;
+    });
+  
+    // Create a new canvas for the processed image
+    const processedCanvas = document.createElement('canvas');
+    processedCanvas.width = 28;
+    processedCanvas.height = 28;
+    const ctx = processedCanvas.getContext('2d');
+    const imageData = await tf.browser.toPixels(processedTensor.reshape([28, 28]));
+    const imageDataScaled = ctx.createImageData(28, 28);
+    for (let i = 0; i < imageData.length; i++) {
+      imageDataScaled.data[i] = imageData[i] * 255;
+    }
+    ctx.putImageData(imageDataScaled, 0, 0);
+  
+    // Store the processed image data URL in the state
+    setProcessedImage(processedCanvas.toDataURL());
+  
+    const output = window.model.predict(processedTensor);
+    const predictions = output.dataSync();
+    console.log('Predictions:', predictions);
+    const predictedClass = predictions.indexOf(Math.max(...predictions));
+    setPrediction(predictedClass);
+    console.log('Predicted digit:', predictedClass);
+  
+    // Dispose the tensors
+    processedTensor.dispose();
+    output.dispose();
+  };
+  const handleDrawingChange = (dataURL) => {
+    setCanvasImage(dataURL);
+  };
+
 
   return (
     <MainGridContainer>
@@ -305,35 +412,71 @@ const createModel = useCallback(() => {
           </StatusMessageContainer>
           <ButtonContainer>
             {showAnalyseButton && <Button onClick={analyseModel}>Analyse</Button>}
+            {showAnalyseButton && <Button onClick={openModal}>Test</Button>}
+
             <Button onClick={visualizeData} disabled={isLoading || isTraining}>Visualize Data</Button>
             <Button onClick={trainModel} disabled={isLoading || isTraining}>Start Training</Button>
+                        <Button onClick={showVisor}>Toggle Monitor</Button>
+
+
           </ButtonContainer>
+         
+          
+
           <SlidersContainer>
-          <ParameterSlider 
-            label="Epochs" 
-            min={1} 
-            max={50} 
-            step={1} 
-            defaultValue={epochs} 
-            onChange={setEpochs} 
-          />
-          <ParameterSlider 
-            label="Learning Rate" 
-            min={-4} 
-            max={-1} 
-            step={0.1} 
-            defaultValue={learningRate} 
-            onChange={setLearningRate} 
-            isLogarithmic={true} 
-          />
-          <ParameterSlider 
-            label="Test-Train Split" 
-            min={0.1} 
-            max={0.5} 
-            step={0.01} 
-            defaultValue={testTrainSplit} 
-            onChange={setTestTrainSplit} 
-          />          </SlidersContainer>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <ParameterSlider
+              label="Epochs"
+              min={1}
+              max={50}
+              step={1}
+              defaultValue={epochs}
+              onChange={setEpochs}
+            />
+            <TooltipIcon
+              data-tooltip-id="epochsTooltip"
+              data-tooltip-content="An epoch is a complete pass through the entire training dataset. Increasing the number of epochs allows the model to learn more from the data, but may also lead to overfitting."
+            >
+              ⓘ
+            </TooltipIcon>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <ParameterSlider
+              label="Learning Rate"
+              min={-4}
+              max={-1}
+              step={0.1}
+              defaultValue={learningRate}
+              onChange={setLearningRate}
+              isLogarithmic={true}
+            />
+            <TooltipIcon
+              data-tooltip-id="learningRateTooltip"
+              data-tooltip-content="The learning rate determines the step size at which the model's weights are updated during training. A higher learning rate can lead to faster convergence but may overshoot the optimal solution, while a lower learning rate can lead to slower convergence but may find a better solution."
+            >
+              ⓘ
+            </TooltipIcon>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <ParameterSlider
+              label="Test-Train Split"
+              min={0.1}
+              max={0.5}
+              step={0.01}
+              defaultValue={testTrainSplit}
+              onChange={setTestTrainSplit}
+            />
+            <TooltipIcon
+              data-tooltip-id="testTrainSplitTooltip"
+              data-tooltip-content="The test-train split determines the proportion of the dataset that is used for evaluating the model's performance (test set) and the proportion used for training the model (train set). A common split is 20% for testing and 80% for training."
+            >
+              ⓘ
+            </TooltipIcon>
+          </div>
+        </SlidersContainer>
+
+
+
           
         </MiddleFlexBox>
         
@@ -344,6 +487,29 @@ const createModel = useCallback(() => {
 
         <VisorContainer id="tfjs-visor-container">
         </VisorContainer>
+        <Modal show={isModalOpen}>
+  <ModalContent>
+    <h2>Test Drawing</h2>
+    <TestDrawableCanvas onDrawingChange={handleDrawingChange} />
+    
+    {processedImage && (
+      <div>
+        <h3>Processed Image:</h3>
+        <img src={processedImage} alt="Processed" />
+      </div>
+    )}
+    
+    {prediction !== null && (
+      <p>Predicted Digit: {prediction}</p>
+    )}
+    <Button onClick={predictDrawing}>Predict</Button>
+    <Button onClick={closeModal}>Close</Button>
+  </ModalContent>
+</Modal>
+<StyledTooltip id="epochsTooltip" place="left" />
+<StyledTooltip id="learningRateTooltip" place="left" />
+<StyledTooltip id="testTrainSplitTooltip" place="left" />
+
       </MainGridContainer>
   );
 };
