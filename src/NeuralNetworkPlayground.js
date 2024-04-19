@@ -41,7 +41,7 @@ const Modal = styled.div`
   z-index: 1;
   left: 0;
   top: 0;
-  width: 50%;
+  width: 60%;
   height: 100%;
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.4);
@@ -53,6 +53,10 @@ const ModalContent = styled.div`
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
 const MainGridContainer = styled.div`
@@ -345,6 +349,15 @@ for (let i = 0; i < 5; i++) {
   const [processedImage, setProcessedImage] = useState(null);
   const [mnistSamples, setMnistSamples] = useState([]);
   const [selectedSample, setSelectedSample] = useState(null);
+  const [showInstructions, setShowInstructions] = useState(true);
+
+  const closeInstructions = () => {
+    setShowInstructions(false);
+  };
+
+  const openInstructions = () => {
+    setShowInstructions(true);
+  };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -452,6 +465,8 @@ for (let i = 0; i < 5; i++) {
             <Button onClick={visualizeData} disabled={isLoading || isTraining}>Visualize Data</Button>
             <Button onClick={trainModel} disabled={isLoading || isTraining}>Start Training</Button>
                         <Button onClick={showVisor}>Toggle Monitor</Button>
+                        <Button onClick={openInstructions}>Show Instructions</Button>
+
 
 
           </ButtonContainer>
@@ -463,7 +478,7 @@ for (let i = 0; i < 5; i++) {
             <ParameterSlider
               label="Epochs"
               min={1}
-              max={50}
+              max={20}
               step={1}
               defaultValue={epochs}
               onChange={setEpochs}
@@ -555,16 +570,46 @@ for (let i = 0; i < 5; i++) {
   ))}
 </div>
 
-          {processedImage && (
+          {/* {processedImage && (
             <div>
               <h3>Processed Image:</h3>
               <img src={processedImage} alt="Processed" />
             </div>
-          )}
+          )} */}
 
           {prediction !== null && <p>Predicted Digit: {prediction}</p>}
           <Button onClick={predictDrawing}>Predict</Button>
           <Button onClick={closeModal}>Close</Button>
+        </ModalContent>
+      </Modal>
+      <Modal show={showInstructions}>
+        <ModalContent>
+          <h2>Instructions</h2>
+          <p>
+            1. Customize the model parameters using the sliders.
+            <br />
+            2. Use the "Toggle Monitor" button to enable/disable the dashboard to see graphs, analysis, or visualization.
+            <br />
+            3. Visualize the dataset by clicking the "Visualize Data" button.
+            <br />
+            4. Train the model by clicking the "Start Training" button.
+            <br />
+            5. Once trained, test the model by clicking the "Test" button or analyze the results by clicking the "Analyse" button.
+            <br />
+            6. If the accuracy is not satisfactory, try adjusting the parameters and train again.
+            <br />
+            7. You can also increase or decrease the number of hidden layer neurons by clicking "+" or "-" in the model visualization. By default, each hidden layer has 10 neurons.
+          </p>
+          <p>Suggested parameter combinations:</p>
+          <ul>
+            <li>Combination 1: Epochs: 1, Learning Rate: 0.1, Test-Train Split: 0.1, Hidden Layer 1 Neurons: 10, Hidden Layer 2 Neurons: 10</li>
+            <li>Combination 2: Epochs: 5, Learning Rate: 0.01, Test-Train Split: 0.2, Hidden Layer 1 Neurons: 10, Hidden Layer 2 Neurons: 10</li>
+            <li>Combination 3: Epochs: 10, Learning Rate: 0.001, Test-Train Split: 0.2, Hidden Layer 1 Neurons: 15, Hidden Layer 2 Neurons: 15</li>
+          </ul>
+          <p>
+            During training, the top graph represents the loss, and the second graph represents the training accuracy. The graphs below show the same metrics after each epoch.
+          </p>
+          <Button onClick={closeInstructions}>Close</Button>
         </ModalContent>
       </Modal>
 <StyledTooltip id="epochsTooltip" place="left" />

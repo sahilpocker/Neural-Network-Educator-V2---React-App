@@ -11,87 +11,112 @@ const Button = styled.button`
   border-radius: 5px;
   cursor: pointer;
   font-size: 1em;
-`
+`;
 
 const TestDrawableCanvas = ({ onDrawingChange }) => {
-    const [lines, setLines] = useState([]);
-    const isDrawing = useRef(false);
-    const stageRef = useRef(null);
+  const [lines, setLines] = useState([]);
+  const isDrawing = useRef(false);
+  const stageRef = useRef(null);
+  const canvasWidth = 300;
+  const canvasHeight = 300;
+  const lineWidth = 25;
 
-    const canvasWidth = 300;
-    const canvasHeight = 300;
-    const lineWidth = 25;
+  const updateDataURL = () => {
+    if (stageRef.current) {
+      const dataUrl = stageRef.current.toDataURL();
+      onDrawingChange && onDrawingChange(dataUrl);
+    }
+  };
 
-    const updateDataURL = () => {
-        if (stageRef.current) {
-            const dataUrl = stageRef.current.toDataURL();
-            onDrawingChange && onDrawingChange(dataUrl);
-        }
-    };
+  useEffect(() => {
+    // Update the data URL whenever the lines change
+    updateDataURL();
+  }, [lines]);
 
-    useEffect(() => {
-        // Update the data URL whenever the lines change
-        updateDataURL();
-    }, [lines]);
+  const handleMouseDown = (e) => {
+    isDrawing.current = true;
+    const stage = stageRef.current;
+    const point = stage.getPointerPosition();
+    setLines([...lines, { points: [point.x, point.y] }]);
+  };
 
-    const handleMouseDown = (e) => {
-        isDrawing.current = true;
-        const stage = stageRef.current;
-        const point = stage.getPointerPosition();
-        setLines([...lines, { points: [point.x, point.y] }]);
-    };
+  const handleMouseMove = (e) => {
+    if (!isDrawing.current) return;
+    const stage = stageRef.current;
+    const point = stage.getPointerPosition();
+    const newLines = lines.map(line => ({ ...line }));
+    const lastLine = newLines[newLines.length - 1];
+    lastLine.points = lastLine.points.concat([point.x, point.y]);
+    setLines(newLines);
+  };
 
-    const handleMouseMove = (e) => {
-        if (!isDrawing.current) return;
-        const stage = stageRef.current;
-        const point = stage.getPointerPosition();
-        const newLines = lines.map(line => ({ ...line }));
-        const lastLine = newLines[newLines.length - 1];
-        lastLine.points = lastLine.points.concat([point.x, point.y]);
-        setLines(newLines);
-    };
+  const handleMouseUp = () => {
+    isDrawing.current = false;
+  };
 
-    const handleMouseUp = () => {
-        isDrawing.current = false;
-    };
+  const handleTouchStart = (e) => {
+    isDrawing.current = true;
+    const stage = stageRef.current;
+    const touch = e.evt.touches[0];
+    const point = stage.getPointerPosition();
+    setLines([...lines, { points: [point.x, point.y] }]);
+  };
 
-    const handleClearCanvas = () => {
-        setLines([]);
-    };
-    
-    const handleUndo = () => {
-        setLines(lines.slice(0, -1));
-    };
+  const handleTouchMove = (e) => {
+    if (!isDrawing.current) return;
+    const stage = stageRef.current;
+    const touch = e.evt.touches[0];
+    const point = stage.getPointerPosition();
+    const newLines = lines.map(line => ({ ...line }));
+    const lastLine = newLines[newLines.length - 1];
+    lastLine.points = lastLine.points.concat([point.x, point.y]);
+    setLines(newLines);
+  };
 
-    return (
-        <>
-            <Stage
-                ref={stageRef}
-                width={canvasWidth}
-                height={canvasHeight}
-                onMouseDown={handleMouseDown}
-                onMousemove={handleMouseMove}
-                onMouseup={handleMouseUp}
-            >
-                <Layer>
-                    <Rect x={0} y={0} width={canvasWidth} height={canvasHeight} fill="black" />
-                    {lines.map((line, i) => (
-                        <Line
-                            key={i}
-                            points={line.points}
-                            stroke="white"
-                            strokeWidth={lineWidth}
-                            tension={0.5}
-                            lineCap="round"
-                            lineJoin="round"
-                        />
-                    ))}
-                </Layer>
-            </Stage>
-            <Button onClick={handleClearCanvas}>Clear</Button>
-            <Button onClick={handleUndo}>Undo</Button>
-        </>
-    );
+  const handleTouchEnd = () => {
+    isDrawing.current = false;
+  };
+
+  const handleClearCanvas = () => {
+    setLines([]);
+  };
+
+  const handleUndo = () => {
+    setLines(lines.slice(0, -1));
+  };
+
+  return (
+    <>
+      <Stage
+        ref={stageRef}
+        width={canvasWidth}
+        height={canvasHeight}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        <Layer>
+          <Rect x={0} y={0} width={canvasWidth} height={canvasHeight} fill="black" />
+          {lines.map((line, i) => (
+            <Line
+              key={i}
+              points={line.points}
+              stroke="white"
+              strokeWidth={lineWidth}
+              tension={0.5}
+              lineCap="round"
+              lineJoin="round"
+            />
+          ))}
+        </Layer>
+      </Stage>
+      <Button onClick={handleClearCanvas}>Clear</Button>
+      <Button onClick={handleUndo}>Undo</Button>
+    </>
+  );
 };
 
 export default TestDrawableCanvas;
