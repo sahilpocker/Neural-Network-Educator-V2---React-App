@@ -607,7 +607,7 @@ for (let i = 0; i < 5; i++) {
             <li>Combination 3: Epochs: 10, Learning Rate: 0.001, Test-Train Split: 0.2, Hidden Layer 1 Neurons: 15, Hidden Layer 2 Neurons: 15</li>
           </ul>
           <p>
-            During training, the top graph represents the loss, and the second graph represents the training accuracy. The graphs below show the same metrics after each epoch.
+            During training, the top graph represents the loss, and the second graph represents the training accuracy. The graphs below show the validation loss and accuracy after each epoch.
           </p>
           <Button onClick={closeInstructions}>Close</Button>
         </ModalContent>
