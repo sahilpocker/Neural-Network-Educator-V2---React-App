@@ -44,7 +44,7 @@ const Dots = styled.div`
   text-align: center;
   width: 100%;
   margin: 10px 0;
-  z-index: 2;
+  z-index: 1;
 `;
 
 const Link = styled.div`
