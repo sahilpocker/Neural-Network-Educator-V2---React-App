@@ -242,6 +242,18 @@ const createModel = useCallback(() => {
       // Fetching data directly without destructuring
       const trainBatch = data.nextTrainBatch(trainDataSize);
       const testBatch = data.nextTestBatch(testDataSize);
+
+      console.log('Training batch examples:');
+for (let i = 0; i < 5; i++) {
+  const example = trainBatch.xs.slice([i, 0], [1, 784]);
+  console.log(`Example ${i}:`, example.arraySync());
+}
+
+console.log('Test batch examples:');
+for (let i = 0; i < 5; i++) {
+  const example = testBatch.xs.slice([i, 0], [1, 784]);
+  console.log(`Example ${i}:`, example.arraySync());
+}
   
       // Check if trainBatch and testBatch are valid
       if (!trainBatch || !testBatch) {
@@ -355,7 +367,6 @@ const createModel = useCallback(() => {
   
     if (selectedSample) {
       processedTensor = tf.tensor(selectedSample)
-        .div(tf.scalar(255))  // Normalize the pixel values
         .reshape([1, 784]);
     } else {
       const image = new Image();
@@ -366,10 +377,9 @@ const createModel = useCallback(() => {
   
       const img = await tf.browser.fromPixels(image, 1);
       processedTensor = await tf.tidy(() => {
-        let tensor = img.toFloat().div(tf.scalar(255));
+        let tensor = img.toFloat().div(tf.scalar(255));  // Normalize the pixel values
         tensor = tf.image.resizeBilinear(tensor, [28, 28]);
         tensor = tensor.reshape([1, 784]);
-        tensor = tf.scalar(1).sub(tensor); // Invert the colors
         return tensor;
       });
     }
@@ -379,17 +389,15 @@ const createModel = useCallback(() => {
     processedCanvas.width = 28;
     processedCanvas.height = 28;
     const ctx = processedCanvas.getContext('2d');
-    const imageData = await tf.browser.toPixels(processedTensor.reshape([28, 28]));
-    const imageDataScaled = ctx.createImageData(28, 28);
-    for (let i = 0; i < imageData.length; i++) {
-      imageDataScaled.data[i] = imageData[i] * 255;
-    }
-    ctx.putImageData(imageDataScaled, 0, 0);
+    await tf.browser.toPixels(processedTensor.reshape([28, 28]), processedCanvas);  // Draw the processed image on the canvas
   
     // Store the processed image data URL in the state
     setProcessedImage(processedCanvas.toDataURL());
   
-    const output = window.model.predict(processedTensor);
+    // Log the processed input tensor values
+    console.log('Processed input tensor values:', processedTensor.arraySync());
+  
+    const output = model.predict(processedTensor);
     const predictions = output.dataSync();
     console.log('Predictions:', predictions);
     const predictedClass = predictions.indexOf(Math.max(...predictions));
@@ -400,6 +408,7 @@ const createModel = useCallback(() => {
     processedTensor.dispose();
     output.dispose();
   };
+
 
   const handleDrawingChange = (dataURL) => {
     setCanvasImage(dataURL);

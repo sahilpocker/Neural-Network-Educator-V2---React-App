@@ -74,12 +74,12 @@ const TestDrawableCanvas = ({ onDrawingChange }) => {
                 onMouseup={handleMouseUp}
             >
                 <Layer>
-                    <Rect x={0} y={0} width={canvasWidth} height={canvasHeight} fill="white" />
+                    <Rect x={0} y={0} width={canvasWidth} height={canvasHeight} fill="black" />
                     {lines.map((line, i) => (
                         <Line
                             key={i}
                             points={line.points}
-                            stroke="black"
+                            stroke="white"
                             strokeWidth={lineWidth}
                             tension={0.5}
                             lineCap="round"
