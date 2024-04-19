@@ -331,6 +331,8 @@ const createModel = useCallback(() => {
   const [prediction, setPrediction] = useState(null);
   const [canvasImage, setCanvasImage] = useState(null);
   const [processedImage, setProcessedImage] = useState(null);
+  const [mnistSamples, setMnistSamples] = useState([]);
+  const [selectedSample, setSelectedSample] = useState(null);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -340,28 +342,37 @@ const createModel = useCallback(() => {
     setIsModalOpen(false);
     setPrediction(null);
     setCanvasImage(null);
+    setSelectedSample(null);
   };
 
   const predictDrawing = async () => {
-    if (!window.model || !canvasImage) {
-      console.error('Model or canvas image is not available for prediction');
+    if (!window.model || (!canvasImage && !selectedSample)) {
+      console.error('Model, canvas image, or selected sample is not available for prediction');
       return;
     }
   
-    const image = new Image();
-    image.src = canvasImage;
-    await new Promise((resolve) => {
-      image.onload = resolve;
-    });
+    let processedTensor;
   
-    const img = await tf.browser.fromPixels(image, 1);
-    const processedTensor = await tf.tidy(() => {
-      let tensor = img.toFloat().div(tf.scalar(255));
-      tensor = tf.image.resizeBilinear(tensor, [28, 28]);
-      tensor = tensor.reshape([1, 784]);
-      tensor = tf.scalar(1).sub(tensor); // Invert the colors
-      return tensor;
-    });
+    if (selectedSample) {
+      processedTensor = tf.tensor(selectedSample)
+        .div(tf.scalar(255))  // Normalize the pixel values
+        .reshape([1, 784]);
+    } else {
+      const image = new Image();
+      image.src = canvasImage;
+      await new Promise((resolve) => {
+        image.onload = resolve;
+      });
+  
+      const img = await tf.browser.fromPixels(image, 1);
+      processedTensor = await tf.tidy(() => {
+        let tensor = img.toFloat().div(tf.scalar(255));
+        tensor = tf.image.resizeBilinear(tensor, [28, 28]);
+        tensor = tensor.reshape([1, 784]);
+        tensor = tf.scalar(1).sub(tensor); // Invert the colors
+        return tensor;
+      });
+    }
   
     // Create a new canvas for the processed image
     const processedCanvas = document.createElement('canvas');
@@ -389,9 +400,24 @@ const createModel = useCallback(() => {
     processedTensor.dispose();
     output.dispose();
   };
+
   const handleDrawingChange = (dataURL) => {
     setCanvasImage(dataURL);
+    setSelectedSample(null);
   };
+
+  const handleSampleClick = (sample) => {
+    setSelectedSample(sample);
+    setCanvasImage(null);
+  };
+
+  useEffect(() => {
+    if (data) {
+      const testData = data.nextTestBatch(20);
+      const samples = testData.xs.arraySync();
+      setMnistSamples(samples);
+    }
+  }, [data]);
 
 
   return (
@@ -488,24 +514,50 @@ const createModel = useCallback(() => {
         <VisorContainer id="tfjs-visor-container">
         </VisorContainer>
         <Modal show={isModalOpen}>
-  <ModalContent>
-    <h2>Test Drawing</h2>
-    <TestDrawableCanvas onDrawingChange={handleDrawingChange} />
-    
-    {processedImage && (
-      <div>
-        <h3>Processed Image:</h3>
-        <img src={processedImage} alt="Processed" />
-      </div>
-    )}
-    
-    {prediction !== null && (
-      <p>Predicted Digit: {prediction}</p>
-    )}
-    <Button onClick={predictDrawing}>Predict</Button>
-    <Button onClick={closeModal}>Close</Button>
-  </ModalContent>
-</Modal>
+        <ModalContent>
+          <h2>Test Drawing</h2>
+          <TestDrawableCanvas onDrawingChange={handleDrawingChange} />
+
+          <h3>Or Select an MNIST Sample:</h3>
+          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+  {mnistSamples.map((sample, index) => (
+    <div
+      key={index}
+      style={{
+        border: selectedSample && JSON.stringify(sample) === JSON.stringify(selectedSample) ? '2px solid blue' : 'none',
+        margin: '5px',
+        cursor: 'pointer',
+      }}
+      onClick={() => handleSampleClick(sample)}
+    >
+      <canvas
+        width="28"
+        height="28"
+        style={{ margin: '4px' }}
+        ref={(canvas) => {
+          if (canvas) {
+            const imageTensor = tf.tidy(() => tf.tensor(sample).reshape([28, 28, 1]));
+            tf.browser.toPixels(imageTensor, canvas);
+            imageTensor.dispose();
+          }
+        }}
+      />
+    </div>
+  ))}
+</div>
+
+          {processedImage && (
+            <div>
+              <h3>Processed Image:</h3>
+              <img src={processedImage} alt="Processed" />
+            </div>
+          )}
+
+          {prediction !== null && <p>Predicted Digit: {prediction}</p>}
+          <Button onClick={predictDrawing}>Predict</Button>
+          <Button onClick={closeModal}>Close</Button>
+        </ModalContent>
+      </Modal>
 <StyledTooltip id="epochsTooltip" place="left" />
 <StyledTooltip id="learningRateTooltip" place="left" />
 <StyledTooltip id="testTrainSplitTooltip" place="left" />
